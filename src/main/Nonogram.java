@@ -24,24 +24,21 @@ public class Nonogram {
             List<Block> blocks = row.getBlocks();
             int blockIndex = 0;
             Block block = blocks.get(blockIndex);
-            for (int i = 0; i < gridWidth - 1; ) {
+            for (int i = 0; i <= gridWidth - 1; ) {
                 if (blockIndex <= blocks.size() - 1) {
                     if (blockIndex > 0) {
                         block = blocks.get(blockIndex);
-                        block.setStartIndex(i);
                     }
                 }
                 if (i == block.getStartIndex()) {
                     drawBlock(block);
                     i += block.getSize();
                     blockIndex++;
-                    if (i == gridWidth - 1){
+                    if (block.getStartIndex() == gridWidth - block.getSize()){
                         break;
                     }
                 } else {
                     i++;
-                }
-                if (i <= gridWidth - 1) {
                     System.out.print((char) 9633);
                 }
             }

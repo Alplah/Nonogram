@@ -17,6 +17,22 @@ public class Creator {
         return new Grid(width, height, rows, columns);
     }
 
+    public Line cloneLine(Line line) {
+        List<Block> clonedBlocks = new ArrayList<>();
+        for (Block block: line.getBlocks()){
+            List<Cell> clonedCells = new ArrayList<>();
+            Block clonedBlock = new Block();
+            for (Cell cell: block.getCells()){
+                Cell clonedCell = new Cell();
+                clonedCells.add(clonedCell);
+            }
+            clonedBlock.setCells(clonedCells);
+            clonedBlocks.add(clonedBlock);
+        }
+        Line clonedLine = new Line(clonedBlocks, line.getLength());
+        return clonedLine;
+    }
+
     private void initRows(List<Row> rows, int width){
         List<Cell> cells11 = new ArrayList<>();
         List<Cell> cells12 = new ArrayList<>();
@@ -38,8 +54,12 @@ public class Creator {
         List<Cell> cells21 = new ArrayList<>();
         Cell cell211 = new Cell();
         Cell cell212 = new Cell();
+        Cell cell213 = new Cell();
+     //   Cell cell214 = new Cell();
         cells21.add(cell211);
         cells21.add(cell212);
+        cells21.add(cell213);
+       // cells21.add(cell214);
         Block block21 = new Block();
         block21.setCells(cells21);
         List<Block> blocks2 = new ArrayList<>();

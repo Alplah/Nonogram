@@ -27,4 +27,8 @@ public class Line {
         }
         return size;
     }
+
+    public int getLength() {
+        return length;
+    }
 }
