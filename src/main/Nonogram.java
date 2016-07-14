@@ -1,6 +1,7 @@
 package main;
 
 import main.domains.Block;
+import main.domains.Cell;
 import main.domains.Grid;
 import main.domains.Row;
 import main.services.Creator;
@@ -48,7 +49,12 @@ public class Nonogram {
 
     private void drawBlock(Block block) {
         for (int j = 0; j < block.getSize(); j++) {
-            System.out.print((char) 9632);
+            Cell cell = block.getCells().get(j);
+            if (cell.isFilled() && cell.isSolved()) {
+                System.out.print((char) 9632);
+            } else {
+                System.out.print("?");
+            }
         }
     }
 }

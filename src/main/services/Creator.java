@@ -2,27 +2,76 @@ package main.services;
 
 
 import main.domains.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Creator {
 
     public Grid init() {
-        int height = 3;
-        int width = 4;
+        int height = 9;
+        int width = 9;
         List<Row> rows = new ArrayList<>();
         List<Column> columns = new ArrayList<>();
-        initRows(rows, width);
-        initColumns(columns, height);
+        readAndInitData(height, width, rows, columns);
         return new Grid(width, height, rows, columns);
+    }
+
+    private void readAndInitData(int height, int width, List<Row> rows, List<Column> columns) {
+        String fileName = "c://nonogram.txt";
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+            List<String> lines = stream.collect(Collectors.toList());
+            int i = 1;
+            for (String line: lines) {
+                String[] blocks = line.split(" ");
+                if (i <= height) {
+                    initRow(rows, blocks, width);
+                } else {
+                    initColumn(columns, blocks, width);
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Block> initBlocks(String[] lineBlocks) {
+        List<Block> blocks = new ArrayList<>();
+        for (String lineBlock : lineBlocks) {
+            List<Cell> cells = new ArrayList<>();
+            Block block = new Block();
+            for (int i = 0; i < Integer.parseInt(lineBlock); i++) {
+                Cell cell = new Cell();
+                cells.add(cell);
+            }
+            block.setCells(cells);
+            blocks.add(block);
+        }
+        return blocks;
+    }
+
+    private void initRow(List<Row> rows, String[] lineBlocks, int width) {
+        Row row = new Row(initBlocks(lineBlocks), width);
+        rows.add(row);
+    }
+
+    private void initColumn(List<Column> columns, String[] lineBlocks, int width) {
+        Column column = new Column(initBlocks(lineBlocks), width);
+        columns.add(column);
     }
 
     public Line cloneLine(Line line) {
         List<Block> clonedBlocks = new ArrayList<>();
-        for (Block block: line.getBlocks()){
+        for (Block block : line.getBlocks()) {
             List<Cell> clonedCells = new ArrayList<>();
             Block clonedBlock = new Block();
-            for (Cell cell: block.getCells()){
+            for (Cell cell : block.getCells()) {
                 Cell clonedCell = new Cell();
                 clonedCells.add(clonedCell);
             }
@@ -31,102 +80,5 @@ public class Creator {
         }
         Line clonedLine = new Line(clonedBlocks, line.getLength());
         return clonedLine;
-    }
-
-    private void initRows(List<Row> rows, int width){
-        List<Cell> cells11 = new ArrayList<>();
-        List<Cell> cells12 = new ArrayList<>();
-        Cell cell111 = new Cell();
-        Cell cell112 = new Cell();
-        Cell cell121 = new Cell();
-        cells11.add(cell111);
-        cells11.add(cell112);
-        cells12.add(cell121);
-        Block block11 = new Block();
-        block11.setCells(cells11);
-        Block block12 = new Block();
-        block12.setCells(cells12);
-        List<Block> blocks1 = new ArrayList<>();
-        blocks1.add(block11);
-        blocks1.add(block12);
-        Row row1 = new Row(blocks1, width);
-
-        List<Cell> cells21 = new ArrayList<>();
-        Cell cell211 = new Cell();
-        Cell cell212 = new Cell();
-        Cell cell213 = new Cell();
-     //   Cell cell214 = new Cell();
-        cells21.add(cell211);
-        cells21.add(cell212);
-        cells21.add(cell213);
-       // cells21.add(cell214);
-        Block block21 = new Block();
-        block21.setCells(cells21);
-        List<Block> blocks2 = new ArrayList<>();
-        blocks2.add(block21);
-        Row row2 = new Row(blocks2, width);
-
-        List<Cell> cells31 = new ArrayList<>();
-        Cell cell311 = new Cell();
-        cells31.add(cell311);
-        Block block31 = new Block();
-        block31.setCells(cells31);
-        List<Block> blocks3 = new ArrayList<>();
-        blocks3.add(block31);
-        Row row3 = new Row(blocks3, width);
-        rows.add(row1);
-        rows.add(row2);
-        rows.add(row3);
-    }
-
-    private void initColumns(List<Column> columns, int width){
-        List<Cell> cells11 = new ArrayList<>();
-        Cell cell111 = new Cell();
-        cells11.add(cell111);
-        Block block11 = new Block();
-        block11.setCells(cells11);
-        List<Block> blocks1 = new ArrayList<>();
-        blocks1.add(block11);
-        Column column1 = new Column(blocks1, width);
-
-        List<Cell> cells21 = new ArrayList<>();
-        Cell cell211 = new Cell();
-        Cell cell212 = new Cell();
-        cells11.add(cell211);
-        cells11.add(cell212);
-        Block block21 = new Block();
-        block11.setCells(cells21);
-        List<Block> blocks2 = new ArrayList<>();
-        blocks2.add(block21);
-        Column column2 = new Column(blocks2, width);
-
-        List<Cell> cells31 = new ArrayList<>();
-        Cell cell311 = new Cell();
-        cells11.add(cell311);
-        Block block31 = new Block();
-        block11.setCells(cells31);
-        List<Block> blocks3 = new ArrayList<>();
-        blocks3.add(block31);
-        Column column3 = new Column(blocks3, width);
-
-        List<Cell> cells41 = new ArrayList<>();
-        List<Cell> cells42 = new ArrayList<>();
-        Cell cell411 = new Cell();
-        Cell cell421 = new Cell();
-        cells41.add(cell411);
-        cells42.add(cell421);
-        Block block41 = new Block();
-        block11.setCells(cells41);
-        Block block42 = new Block();
-        block42.setCells(cells42);
-        List<Block> blocks4 = new ArrayList<>();
-        blocks4.add(block41);
-        blocks4.add(block42);
-        Column column4 = new Column(blocks4, width);
-
-        columns.add(column1);
-        columns.add(column2);
-        columns.add(column3);
-        columns.add(column4);
     }
 }
